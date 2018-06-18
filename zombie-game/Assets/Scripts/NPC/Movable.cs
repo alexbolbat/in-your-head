@@ -59,33 +59,35 @@ namespace NPC
 
         private void Update()
         {
-            if (GetIsReachedTarget())
+            if (isMoving)
             {
-                SetMoving(false);
+                if (target == null || GetIsReachedTarget(0f))
+                {
+                    Debug.Log("stop moving");
+                    isMoving = false;
+
+                    agent.isStopped = true;
+
+                    SetMoveAnimation(false);
+                    SetTargetReached(true);
+                }
             }
             else
             {
                 if (target != null)
                 {
-                    SetMoving(true);
+                    if (!GetIsReachedTarget(0.1f))
+                    { 
+                        Debug.Log("start moving");
+                        isMoving = true;
 
+                        agent.isStopped = false;
+
+                        SetMoveAnimation(true);
+                        SetTargetReached(false);
+                    }
                     agent.SetDestination(target.position);
                 }
-            }
-        }
-
-
-        private void SetMoving(bool value)
-        {
-            if (isMoving != value)
-            {
-                Debug.Log("SetMoving " + value);
-                isMoving = value;
-
-                agent.isStopped = !value;
-
-                SetMoveAnimation(value);
-                SetTargetReached(!value);
             }
         }
 
@@ -107,16 +109,20 @@ namespace NPC
         }
 
 
-        private bool GetIsReachedTarget()
+        private bool GetIsReachedTarget(float thresold)
         {
             if (agent == null || target == null)
             {
                 return false;
             }
-            //TODO: remove magic
-            float distance = reachedDistance >= 0 ? reachedDistance : agent.stoppingDistance + 0.08f;
-            //Debug.Log("GetIsReachedTarget " + Vector3.Distance(target.position, transform.position) + " <= " + distance);
-            return Vector3.Distance(target.position, transform.position) <= distance;
+            float distance = reachedDistance >= 0 ? reachedDistance : agent.stoppingDistance + thresold;
+            //Debug.Log(Vector3.Distance(ZeroY(target.position), ZeroY(transform.position)) + "<=" + distance);
+            return Vector3.Distance(ZeroY(target.position), ZeroY(transform.position)) <= distance;
+        }
+
+        private Vector3 ZeroY(Vector3 vector)
+        {
+            return new Vector3(vector.x, 0f, vector.z);
         }
     }
 }

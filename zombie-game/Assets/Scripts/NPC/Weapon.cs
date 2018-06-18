@@ -11,6 +11,8 @@ namespace NPC
         protected float distance = 1f;
         [SerializeField]
         protected float damage = 1f;
+        [SerializeField]
+        protected float fireRate = 1f;
 
         public float Distance
         {
