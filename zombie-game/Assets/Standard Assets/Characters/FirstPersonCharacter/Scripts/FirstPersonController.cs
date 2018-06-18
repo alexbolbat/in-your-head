@@ -58,32 +58,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
 
 
-		bool m_IsCaptured;
-		void OnEnable() {
-			Cursor.lockState = CursorLockMode.Locked;
-			Cursor.visible = false;
-			m_IsCaptured = true;
-		}
-
-		void OnDisable() {
-			Cursor.lockState = CursorLockMode.None;
-			Cursor.visible = true;
-			m_IsCaptured = false;
-		}
-
         // Update is called once per frame
         private void Update()
         {
-			if(!m_IsCaptured && Input.GetMouseButtonDown(0))
-				OnEnable();
-
-			if(m_IsCaptured && Input.GetKeyDown(KeyCode.Escape))
-				OnDisable();
-
-			if(m_IsCaptured)
-	            RotateView();
- 
-			// the jump state needs to read here to make sure it is not missed
+            RotateView();
+            // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
             {
                 m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
@@ -123,7 +102,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // get a normal for the surface that is being touched to move along it
             RaycastHit hitInfo;
             Physics.SphereCast(transform.position, m_CharacterController.radius, Vector3.down, out hitInfo,
-                               m_CharacterController.height/2f);
+                               m_CharacterController.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
 
             m_MoveDir.x = desiredMove.x*speed;
@@ -150,6 +129,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             ProgressStepCycle(speed);
             UpdateCameraPosition(speed);
+
+            m_MouseLook.UpdateCursorLock();
         }
 
 
