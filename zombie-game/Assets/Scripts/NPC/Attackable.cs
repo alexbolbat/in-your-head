@@ -58,7 +58,7 @@ namespace NPC
             { 
                 if (target != null)
                 { 
-                    weapon.Attack(target);
+                    weapon.Attack();
                     SetAttackAnimation(true);
                 }
             }

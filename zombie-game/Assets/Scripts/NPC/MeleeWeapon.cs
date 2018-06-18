@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace NPC
@@ -7,20 +8,19 @@ namespace NPC
     {
         [SerializeField]
         private List<ColliderTriggerEnter> colliderTriggers;
-
-        private Character target;
+        [SerializeField]
+        private float postHitCooldown = 1f;
+        
         private bool hitting;
-        private float lastHitTime;
+        private bool isPostHitCooldown;
 
 
-        public override void Attack(Character target)
+        public override void Attack()
         {
-            this.target = target;
         }
 
         public override void Stop()
         {
-            target = null;
         }
 
 
@@ -44,15 +44,22 @@ namespace NPC
 
         private void OnWeaponTriggerEntered(Collider other)
         {
-            if (target != null && hitting)
+            if (hitting && !isPostHitCooldown)
             {
-                if (lastHitTime == 0 || Time.time - lastHitTime >= fireRate)
+                Vulnerable vulnerable = other.GetComponent<Vulnerable>();
+                if (vulnerable != null)
                 {
-                    lastHitTime = Time.time;
-
-                    target.DealDamage(damage);
+                    vulnerable.DealDamage(damage);
+                    StartCoroutine(PostHitCooldownProcess());
                 }
             }
+        }
+
+        private IEnumerator PostHitCooldownProcess()
+        {
+            isPostHitCooldown = true;
+            yield return new WaitForSeconds(postHitCooldown);
+            isPostHitCooldown = false;
         }
     }
 }

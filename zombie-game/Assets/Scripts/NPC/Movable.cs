@@ -46,6 +46,7 @@ namespace NPC
 
         protected override void OnDie()
         {
+            agent.isStopped = true;
         }
 
 
