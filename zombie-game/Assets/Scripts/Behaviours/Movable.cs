@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace NPC
+namespace ZSG.Behaviour
 { 
-    [RequireComponent(typeof(NavMeshAgent))]
     public class Movable : CharacterBehaviour
     {
         public event Action<bool> TargetReachedChanged;
@@ -76,7 +74,7 @@ namespace NPC
             else
             {
                 if (target != null)
-                {
+                {   
                     if (!GetIsReachedTarget(0.1f))
                     { 
                         Debug.Log("start moving");

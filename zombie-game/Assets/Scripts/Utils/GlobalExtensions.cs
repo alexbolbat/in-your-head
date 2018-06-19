@@ -1,6 +1,8 @@
 ﻿using System;
+using UnityEngine;
+using UnityEngine.Assertions;
 
-public static class EventExtentions
+public static class GlobalExtensions
 {
     public static void Call(this Action action)
     {
@@ -18,5 +20,10 @@ public static class EventExtentions
     {
         if(action != null)
             action.Invoke(arg1, arg2);
+    }
+
+    public static void AssertAsset(this MonoBehaviour mb, UnityEngine.Object asset)
+    {
+        Assert.IsNotNull(asset, mb.name + ": missing asset");
     }
 }

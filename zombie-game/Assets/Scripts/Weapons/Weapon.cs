@@ -1,18 +1,14 @@
 ﻿using System;
 using UnityEngine;
 
-namespace NPC
+namespace ZSG.Weapons
 {
-    public class Weapon : MonoBehaviour
+    public abstract class Weapon : MonoBehaviour
     {
-        public event Action<float> DamageMade;
-
         [SerializeField]
         protected float distance = 1f;
         [SerializeField]
         protected float damage = 1f;
-        [SerializeField]
-        protected float fireRate = 1f;
 
         public float Distance
         {
@@ -22,12 +18,8 @@ namespace NPC
             }
         }
 
-        public virtual void Attack()
-        {
-        }
+        public abstract void Attack();
 
-        public virtual void Stop()
-        {
-        }
+        public abstract void Stop();
     }
 }

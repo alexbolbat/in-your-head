@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
+using ZSG.Objects;
+using ZSG.Weapons;
 
-namespace NPC
+namespace ZSG.Behaviour
 {
     public class Attackable : CharacterBehaviour
     {

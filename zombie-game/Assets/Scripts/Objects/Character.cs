@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using ZSG.Behaviour;
 
-namespace NPC
+namespace ZSG.Objects
 { 
     public class Character : MonoBehaviour
     {

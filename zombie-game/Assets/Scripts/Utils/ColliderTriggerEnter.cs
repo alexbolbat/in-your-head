@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace NPC
+namespace ZSG.Utils
 {
     public class ColliderTriggerEnter : MonoBehaviour
     {

@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ZSG.Objects;
+using ZSG.Utils;
 
-namespace NPC
+namespace ZSG.Weapons
 {
     public class MeleeWeapon : Weapon
     {
