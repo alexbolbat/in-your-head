@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using ZSG.Controller;
 
 namespace ZSG.Weapons
 {
@@ -9,6 +10,10 @@ namespace ZSG.Weapons
             Idle, Fire, Reload, OutOfAmmo
         }
 
+        [SerializeField]
+        private Projectile projectile;
+        [SerializeField]
+        private Transform muzzle;
         [SerializeField]
         private int clipSize = 10;
         [SerializeField]
@@ -53,7 +58,6 @@ namespace ZSG.Weapons
 
         private void OnFireAnimnCompleted()
         {
-            Debug.Log("OnFireAnimnCompleted");
             state = State.Idle;
             if (automatic && shooting)
             { 
@@ -63,7 +67,6 @@ namespace ZSG.Weapons
 
         private void OnReloadAnimnCompleted()
         {
-            Debug.Log("OnReloadAnimnCompleted");
             state = State.Idle;
             if (automatic && shooting)
             {
@@ -84,16 +87,9 @@ namespace ZSG.Weapons
                 roundsInClip--;
                 state = State.Fire;
 
-                animations.Fire();
-                if (fireEffect != null)
-                {
-                    fireEffect.Emit(1);
-                }
-                if (lightEffect != null)
-                { 
-                    lightEffect.enabled = true;
-                    Utils.TimerUtil.Timeout(0.1f, () => lightEffect.enabled = false);
-                }
+                FireEffects();
+
+                ProjectileFactory.InitProjectile(projectile, muzzle, damage);
             }
             else if (rounds > 0)
             {
@@ -105,6 +101,22 @@ namespace ZSG.Weapons
             else
             {
                 animations.FireEmpty();
+            }
+        }
+
+        //private void 
+
+        private void FireEffects()
+        {
+            animations.Fire();
+            if (fireEffect != null)
+            {
+                fireEffect.Emit(1);
+            }
+            if (lightEffect != null)
+            {
+                lightEffect.enabled = true;
+                Utils.TimerUtil.Timeout(0.1f, () => lightEffect.enabled = false);
             }
         }
     }

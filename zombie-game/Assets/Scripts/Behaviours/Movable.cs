@@ -62,13 +62,17 @@ namespace ZSG.Behaviour
             {
                 if (target == null || GetIsReachedTarget(0f))
                 {
-                    Debug.Log("stop moving");
+                    //Debug.Log("stop moving");
                     isMoving = false;
 
                     agent.isStopped = true;
 
                     SetMoveAnimation(false);
                     SetTargetReached(true);
+                }
+                else if (target != null)
+                {
+                    agent.SetDestination(target.position);
                 }
             }
             else
@@ -77,7 +81,7 @@ namespace ZSG.Behaviour
                 {   
                     if (!GetIsReachedTarget(0.1f))
                     { 
-                        Debug.Log("start moving");
+                        //Debug.Log("start moving");
                         isMoving = true;
 
                         agent.isStopped = false;

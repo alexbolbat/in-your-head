@@ -24,6 +24,6 @@ public static class GlobalExtensions
 
     public static void AssertAsset(this MonoBehaviour mb, UnityEngine.Object asset)
     {
-        Assert.IsNotNull(asset, mb.name + ": missing asset");
+        Assert.IsNotNull(asset, mb + " " + mb.name + ": missing asset");
     }
 }
