@@ -17,15 +17,6 @@ namespace ZSG.Weapons
         private bool isPostHitCooldown;
 
 
-        public override void Attack()
-        {
-        }
-
-        public override void Stop()
-        {
-        }
-
-
         private void Start()
         {
             colliderTriggers.ForEach(trigger =>
@@ -34,20 +25,22 @@ namespace ZSG.Weapons
             });
         }
 
+        //animation message
         private void OnAttackStarted()
         {
             hitting = true;
         }
-
+        //animation message
         private void OnAttackFinished()
         {
             hitting = false;
         }
 
         private void OnWeaponTriggerEntered(Collider other)
-        {
+        {   
             if (hitting && !isPostHitCooldown)
             {
+                //Debug.Log("OnWeaponTriggerEntered " + other);
                 Vulnerable vulnerable = other.GetComponent<Vulnerable>();
                 if (vulnerable != null)
                 {

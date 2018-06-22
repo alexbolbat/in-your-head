@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using ZSG.Objects;
 using ZSG.Weapons;
 
 namespace ZSG.Controller
@@ -6,10 +8,13 @@ namespace ZSG.Controller
     public class PlayerController : MonoBehaviour
     {
         [SerializeField]
-        private PlayerInput input;
-
+        private Character character;
         [SerializeField]
-        private Weapon weapon;
+        private PlayerInput input;
+        [SerializeField]
+        private List<Weapon> weapons;
+
+        private Weapon currentWeapon;
 
 
         private void Awake()
@@ -21,22 +26,28 @@ namespace ZSG.Controller
         {
             input.FireStart += OnFireStart;
             input.FireEnd += OnFireEnd;
+
+            if (weapons.Count > 0)
+            {
+                currentWeapon = weapons[0];
+                currentWeapon.Show();
+            }
         }
 
 
         private void OnFireStart()
         {
-            if (weapon != null)
+            if (currentWeapon != null)
             {
-                weapon.Attack();
+                currentWeapon.StartAttack();
             }
         }
 
         private void OnFireEnd()
         {
-            if (weapon != null)
+            if (currentWeapon != null)
             {
-                weapon.Stop();
+                currentWeapon.StopAttack();
             }
         }
     }

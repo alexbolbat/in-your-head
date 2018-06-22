@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using ZSG.Controller;
+using ZSG.Utils;
 
 namespace ZSG.Weapons
 {
@@ -19,9 +20,13 @@ namespace ZSG.Weapons
         [SerializeField]
         private int rounds = 100;
         [SerializeField]
-        private bool automatic;
+        private float reloadTime = 1f;
         [SerializeField]
-        private FirearmsAnimations animations;
+        private float fireRate = 1f;
+        [SerializeField]
+        private string reloadAnimnParam = "Reload";
+        [SerializeField]
+        private string outOfAmmoAnimnParam = "OutOfAmmo";
         [SerializeField]
         private ParticleSystem fireEffect;
         [SerializeField]
@@ -31,44 +36,61 @@ namespace ZSG.Weapons
         private int roundsInClip;
         private bool shooting;
 
-        public override void Attack()
+        public override void StartAttack()
         {
             shooting = true;
-            Fire();
+
+            if (state == State.Idle)
+            {
+                base.StartAttack();
+
+                Fire();
+            }
         }
 
-        public override void Stop()
+        public override void StopAttack()
         {
+            base.StopAttack();
+
             shooting = false;
+        }
+
+        public override void AttackOnce()
+        {
+            if (state == State.Idle)
+            { 
+                base.AttackOnce();
+
+                Fire();
+            }
         }
 
 
         private void Awake()
         {
-            this.AssertAsset(animations);
-
             roundsInClip = Mathf.Min(rounds, clipSize);
         }
 
         private void Start()
         {
-            animations.FireCompleted += OnFireAnimnCompleted;
-            animations.ReloadCompleted += OnReloadAnimnCompleted;
         }
 
-        private void OnFireAnimnCompleted()
+        private void OnFireCompleted()
         {
-            state = State.Idle;
-            if (automatic && shooting)
+            if (state == State.Fire)
             { 
-                Fire();
+                state = State.Idle;
+                if (shooting)
+                { 
+                    Fire();
+                }
             }
         }
 
-        private void OnReloadAnimnCompleted()
+        private void OnReloadCompleted()
         {
             state = State.Idle;
-            if (automatic && shooting)
+            if (shooting)
             {
                 Fire();
             }
@@ -87,6 +109,8 @@ namespace ZSG.Weapons
                 roundsInClip--;
                 state = State.Fire;
 
+                TimerUtil.Timeout(fireRate, OnFireCompleted);
+
                 FireEffects();
 
                 ProjectileFactory.InitProjectile(projectile, muzzle, damage);
@@ -96,11 +120,18 @@ namespace ZSG.Weapons
                 roundsInClip = Mathf.Min(rounds, clipSize);
                 state = State.Reload;
 
-                animations.Reload();
+                if (shooting)
+                { 
+                    base.StopAttack();
+                }
+
+                TimerUtil.Timeout(reloadTime, OnReloadCompleted);
+
+                SetAnimationParam(reloadAnimnParam);
             }
             else
             {
-                animations.FireEmpty();
+                SetAnimationParam(outOfAmmoAnimnParam);
             }
         }
 
@@ -108,7 +139,6 @@ namespace ZSG.Weapons
 
         private void FireEffects()
         {
-            animations.Fire();
             if (fireEffect != null)
             {
                 fireEffect.Emit(1);
@@ -116,7 +146,7 @@ namespace ZSG.Weapons
             if (lightEffect != null)
             {
                 lightEffect.enabled = true;
-                Utils.TimerUtil.Timeout(0.1f, () => lightEffect.enabled = false);
+                TimerUtil.Timeout(0.1f, () => lightEffect.enabled = false);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using ZSG.Behaviour;
 
@@ -6,6 +7,8 @@ namespace ZSG.Objects
 { 
     public class Character : MonoBehaviour
     {
+        public event Action Died;
+
         [SerializeField]
         private float hp = 100f;
         [SerializeField]
@@ -20,9 +23,27 @@ namespace ZSG.Objects
         private bool isDead;
 
 
+        public bool IsDead
+        {
+            get
+            {
+                return isDead;
+            }
+        }
+
+
         private void Start()
         {
             vulnerables.ForEach(v => v.DamageReceived += OnDamageReceived);
+        }
+
+        private void OnDestroy()
+        {
+            vulnerables.ForEach(v => v.DamageReceived -= OnDamageReceived);
+
+            behaviours = null;
+            animator = null;
+            vulnerables = null;
         }
 
         private void OnDamageReceived(float hp)
@@ -55,6 +76,8 @@ namespace ZSG.Objects
                 behaviour.Die();
             }
             SetDeadAnimation(true);
+
+            Died.Call();
         }
     }
 }

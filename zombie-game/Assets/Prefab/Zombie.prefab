@@ -1560,6 +1560,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distance: 1.5
   damage: 10
+  animator: {fileID: 95132922946921374}
+  attackAnimnName: attacking
+  attackOnceAnimnName: 
+  showAnimnName: 
+  hideAnimnName: 
   colliderTriggers:
   - {fileID: 114033608858468062}
   - {fileID: 114719805914645896}
@@ -1629,8 +1634,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movable: {fileID: 114585670775281986}
   weapon: {fileID: 114336350994008734}
-  animator: {fileID: 95132922946921374}
-  attackAnimnName: attacking
 --- !u!114 &114585670775281986
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -10,40 +10,62 @@ namespace ZSG.Behaviour
         private Movable movable;
         [SerializeField]
         private Weapon weapon;
-        [SerializeField]
-        private Animator animator;
-        [SerializeField]
-        private string attackAnimnName = "attacking";
 
         private Character target;
 
 
         public void SetTarget(Character target)
         {
-            if (isDead)
+            if (isDead || target.IsDead)
             {
                 return;
             }
             this.target = target;
-            if (movable != null && weapon != null)
+            if (movable != null)
             {
                 movable.MoveTo(target.transform, weapon.Distance);
             }
+            target.Died += OnTargetDied;
         }
 
         public void RemoveTarget()
         {
-            target = null;
-            movable.RemoveTarget();
+            if (target != null)
+            { 
+                target.Died -= OnTargetDied;
+                target = null;
+            
+                movable.RemoveTarget();
+            }
         }
 
 
         private void Awake()
         {
+            this.AssertAsset(weapon);
+
             if (movable != null)
             {
                 movable.TargetReachedChanged += OnTargetReachedChanged;
             }
+        }
+
+        private void OnDestroy()
+        {
+            RemoveTarget();
+            if (movable != null)
+            {
+                movable.TargetReachedChanged -= OnTargetReachedChanged;
+            }
+
+            movable = null;
+            weapon = null;
+        }
+
+
+        private void OnTargetDied()
+        {
+            RemoveTarget();
         }
 
 
@@ -60,22 +82,12 @@ namespace ZSG.Behaviour
             { 
                 if (target != null)
                 { 
-                    weapon.Attack();
-                    SetAttackAnimation(true);
+                    weapon.StartAttack();
                 }
             }
             else
             {
-                SetAttackAnimation(false);
-            }
-        }
-
-
-        private void SetAttackAnimation(bool value)
-        {
-            if (animator != null)
-            {
-                animator.SetBool(attackAnimnName, value);
+                weapon.StopAttack();
             }
         }
     }
