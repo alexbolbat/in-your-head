@@ -1,49 +1,74 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using ZSG.Controller;
 using ZSG.Behaviour;
-using ZSG.Objects;
 
-namespace Objects
+namespace ZSG.Objects
 {
     public class Wave : MonoBehaviour
     {
         [SerializeField]
-        private Attackable mamberOrigin;
+        private List<int> waves;
+        [SerializeField]
+        private Character enemyOrigin;
         [SerializeField]
         private Character player;
         [SerializeField]
-        private int count = 1;
-        [SerializeField]
-        private float sizeX = 1f;
-        [SerializeField]
-        private float sizeZ = 1f;
+        private List<RespawnArea> areas;
+
+        private List<Character> enemies = new List<Character>();
+        private int currentWave;
+        private Vector3 startPos;
 
 
         private void Start()
         {
-            for (int i = 0; i < count; i++)
-            {
-                Vector3 pos = transform.position;
-                float x = Random.Range(pos.x - sizeX / 2, pos.x + sizeX / 2);
-                float z = Random.Range(pos.z - sizeZ / 2, pos.z + sizeZ / 2);
-                Attackable instance = Instantiate(mamberOrigin, new Vector3(x, 0, z), Quaternion.identity);
-                instance.SetTarget(player);
-            }
+            startPos = player.transform.position;
+            NextWave();
         }
 
 
-
-        private void OnDrawGizmos()
+        private void NextWave()
         {
-            Gizmos.color = Color.red;
-            Vector3 p1 = transform.position - new Vector3(-sizeX / 2f, 0, -sizeZ / 2f);
-            Vector3 p2 = transform.position - new Vector3(sizeX / 2f, 0, -sizeZ / 2f);
-            Vector3 p3 = transform.position - new Vector3(sizeX / 2f, 0, sizeZ / 2f);
-            Vector3 p4 = transform.position - new Vector3(-sizeX / 2f, 0, sizeZ / 2f);
-            Gizmos.DrawLine(p1, p2);
-            Gizmos.DrawLine(p2, p3);
-            Gizmos.DrawLine(p3, p4);
-            Gizmos.DrawLine(p4, p1);
+            if (currentWave >= waves.Count)
+            {
+                currentWave = 0;
+            }
+            for (int i = 0; i < waves[currentWave]; i++)
+            {
+                Character enemy = Instantiate(enemyOrigin, GetRandomPoint(), Quaternion.identity);
+                enemy.GetBehaviour<Attackable>().SetTarget(player);
+                enemy.Died += OnEnemyDied;
+
+                enemies.Add(enemy);
+            }
+        }
+
+        private Vector3 GetRandomPoint()
+        {
+            RespawnArea area = areas[Random.Range(0, areas.Count)];
+            return area.GetRandomPoint();
+        }
+
+        private bool GetWaveCompleted()
+        {
+            return !enemies.Any(e => !e.IsDead);
+        }
+
+
+        private void OnEnemyDied()
+        {
+            if (GetWaveCompleted())
+            {
+                enemies.ForEach(e => Destroy(e.gameObject));
+                enemies.Clear();
+
+                player.transform.position = startPos;
+
+                currentWave++;
+                NextWave();
+            }
         }
     }
 }

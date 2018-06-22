@@ -18,7 +18,7 @@ namespace ZSG.Behaviour
         private Transform target;
         private bool isMoving;
         private bool isTargetReached;
-        private float reachedDistance = -1f;
+        //private float reachedDistance = -1f;
 
 
         public void MoveTo(Transform target)
@@ -34,7 +34,8 @@ namespace ZSG.Behaviour
             }
             //Debug.Log("move to " + target + " " + reachedDistance);
             this.target = target;
-            this.reachedDistance = reachedDistance;
+            //this.reachedDistance = reachedDistance;
+            agent.stoppingDistance = reachedDistance;
         }
 
         public void RemoveTarget()
@@ -118,7 +119,8 @@ namespace ZSG.Behaviour
             {
                 return false;
             }
-            float distance = reachedDistance >= 0 ? reachedDistance : agent.stoppingDistance + thresold;
+            //float distance = reachedDistance >= 0 ? reachedDistance : agent.stoppingDistance + thresold;
+            float distance = agent.stoppingDistance + thresold;
             //Debug.Log(Vector3.Distance(ZeroY(target.position), ZeroY(transform.position)) + "<=" + distance);
             return Vector3.Distance(ZeroY(target.position), ZeroY(transform.position)) <= distance;
         }

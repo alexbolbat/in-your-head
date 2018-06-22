@@ -34,7 +34,8 @@ namespace ZSG.Behaviour
             { 
                 target.Died -= OnTargetDied;
                 target = null;
-            
+
+                weapon.StopAttack();
                 movable.RemoveTarget();
             }
         }

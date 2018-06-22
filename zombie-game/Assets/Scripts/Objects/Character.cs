@@ -31,6 +31,18 @@ namespace ZSG.Objects
             }
         }
 
+        public T GetBehaviour<T>() where T : CharacterBehaviour
+        {
+            foreach (var behaviour in behaviours)
+            {
+                if (behaviour is T)
+                {
+                    return (T)behaviour;
+                }
+            }
+            return null;
+        }
+
 
         private void Start()
         {
