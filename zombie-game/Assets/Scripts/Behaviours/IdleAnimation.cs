@@ -26,18 +26,19 @@ namespace Behaviours
 
         private void Start()
         {
-            DelayedNextAnimation();
+            StartCoroutine(DelayedNextAnimation());
         }
 
 
         private IEnumerator DelayedNextAnimation()
         {
-            yield return new WaitForSeconds(Random.Range(minInterval, maxInterval));
+            while (true)
+            { 
+                yield return new WaitForSeconds(Random.Range(minInterval, maxInterval));
 
-            animator.SetInteger(animnNumIntName, Random.Range(1, animnsCount + 1));
-            animator.SetTrigger(triggerName);
-
-            DelayedNextAnimation();
+                animator.SetInteger(animnNumIntName, Random.Range(1, animnsCount + 1));
+                animator.SetTrigger(triggerName);
+            }
         }
     }
 }

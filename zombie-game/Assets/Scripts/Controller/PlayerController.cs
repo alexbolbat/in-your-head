@@ -10,6 +10,8 @@ namespace ZSG.Controller
         [SerializeField]
         private Character character;
         [SerializeField]
+        private MonoBehaviour moveController;
+        [SerializeField]
         private PlayerInput input;
         [SerializeField]
         private List<Weapon> weapons;
@@ -26,6 +28,7 @@ namespace ZSG.Controller
         {
             input.FireStart += OnFireStart;
             input.FireEnd += OnFireEnd;
+            character.Died += OnDied;
 
             if (weapons.Count > 0)
             {
@@ -49,6 +52,12 @@ namespace ZSG.Controller
             {
                 currentWeapon.StopAttack();
             }
+        }
+
+        private void OnDied()
+        {
+            input.enabled = false;
+            moveController.enabled = false;
         }
     }
 }

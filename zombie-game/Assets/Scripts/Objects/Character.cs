@@ -58,7 +58,7 @@ namespace ZSG.Objects
 
         private void SetDeadAnimation(bool value)
         {
-            if (animator != null)
+            if (animator != null && !string.IsNullOrEmpty(dieAnimnName))
             {
                 animator.SetBool(dieAnimnName, value);
             }
