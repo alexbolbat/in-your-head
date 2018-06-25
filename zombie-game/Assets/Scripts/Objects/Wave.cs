@@ -81,12 +81,15 @@ namespace ZSG.Objects
         {
             if (GetWaveCompleted())
             {
-                enemies.ForEach(e => Destroy(e.gameObject));
-                enemies.Clear();
+                TimerUtil.Timeout(3f, () =>
+                {
+                    enemies.ForEach(e => Destroy(e.gameObject));
+                    enemies.Clear();
 
-                currentWave++;
+                    currentWave++;
 
-                TimerUtil.Timeout(3f, LaunchWave);
+                    LaunchWave();
+                });
             }
         }
     }
