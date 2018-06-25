@@ -44,6 +44,7 @@ namespace ZSG.Behaviour
 
         protected override void OnDie()
         {
+            RemoveTarget();
             agent.isStopped = true;
         }
 
@@ -95,6 +96,13 @@ namespace ZSG.Behaviour
                 }
             }
         }
+
+        private void OnDestroy()
+        {
+            agent = null;
+            animator = null;
+        }
+
 
         private void SetMoveAnimation(bool value)
         {

@@ -1560,11 +1560,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distance: 1.5
   damage: 10
+  weaponName: 
   animator: {fileID: 95132922946921374}
+  visibleAnimnParamPrefix: Visible
   attackAnimnName: attacking
   attackOnceAnimnName: 
-  showAnimnName: 
-  hideAnimnName: 
   colliderTriggers:
   - {fileID: 114033608858468062}
   - {fileID: 114719805914645896}
@@ -1699,6 +1699,7 @@ MonoBehaviour:
   hp: 100
   behaviours:
   - {fileID: 114538116499144932}
+  - {fileID: 114585670775281986}
   animator: {fileID: 95132922946921374}
   dieAnimnName: dead
   vulnerables:
