@@ -18,8 +18,6 @@ namespace ZSG.Behaviour
         private Transform target;
         private bool isMoving;
         private bool isTargetReached;
-        //private float reachedDistance = -1f;
-
 
         public void MoveTo(Transform target)
         {
@@ -43,6 +41,7 @@ namespace ZSG.Behaviour
             target = null;
         }
 
+
         protected override void OnDie()
         {
             agent.isStopped = true;
@@ -63,7 +62,6 @@ namespace ZSG.Behaviour
             {
                 if (target == null || GetIsReachedTarget(0f))
                 {
-                    //Debug.Log("stop moving");
                     isMoving = false;
 
                     agent.isStopped = true;
@@ -82,13 +80,16 @@ namespace ZSG.Behaviour
                 {   
                     if (!GetIsReachedTarget(0.1f))
                     { 
-                        //Debug.Log("start moving");
                         isMoving = true;
 
                         agent.isStopped = false;
 
                         SetMoveAnimation(true);
                         SetTargetReached(false);
+                    }
+                    else
+                    {
+                        transform.LookAt(new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
                     }
                     agent.SetDestination(target.position);
                 }
