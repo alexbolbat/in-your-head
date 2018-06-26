@@ -16,7 +16,7 @@ namespace ZSG.Behaviour
 
         public void SetTarget(Character target)
         {
-            if (isDead || target.IsDead)
+            if (!isActive || target.IsDead)
             {
                 return;
             }
@@ -70,10 +70,12 @@ namespace ZSG.Behaviour
         }
 
 
-        protected override void OnDie()
+        protected override void OnActiveSet(bool isActive)
         {
-            target = null;
-            movable.Die();
+            if (!isActive)
+            {
+                RemoveTarget();
+            }
         }
 
 

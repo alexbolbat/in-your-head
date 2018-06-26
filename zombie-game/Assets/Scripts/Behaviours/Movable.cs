@@ -26,7 +26,7 @@ namespace ZSG.Behaviour
 
         public void MoveTo(Transform target, float reachedDistance)
         {
-            if (isDead)
+            if (!isActive)
             {
                 return;
             }
@@ -42,10 +42,13 @@ namespace ZSG.Behaviour
         }
 
 
-        protected override void OnDie()
+        protected override void OnActiveSet(bool value)
         {
-            RemoveTarget();
-            agent.isStopped = true;
+            if (!value)
+            { 
+                RemoveTarget();
+                agent.isStopped = true;
+            }
         }
 
 

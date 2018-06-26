@@ -45,7 +45,7 @@ namespace ZSG.Objects
             }
             for (int i = 0; i < waves[currentWave]; i++)
             {
-                Character enemy = Instantiate(enemyOrigin, GetRandomPoint(), Quaternion.identity);
+                Character enemy = App.NPCs.Create(enemyOrigin, GetRandomPoint());
                 enemy.GetBehaviour<Attackable>().SetTarget(player);
                 enemy.Died += OnEnemyDied;
 

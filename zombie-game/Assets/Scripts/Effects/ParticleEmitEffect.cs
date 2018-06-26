@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace ZSG.Effects
@@ -15,9 +16,14 @@ namespace ZSG.Effects
 
         public override void Show()
         {
+            gameObject.SetActive(true);
             particles.Emit(particlesCount);
 
             StartCoroutine(DelayedDestroy());
+        }
+
+        public override void Reset()
+        {
         }
 
 
@@ -30,9 +36,9 @@ namespace ZSG.Effects
         private IEnumerator DelayedDestroy()
         {
             yield return new WaitForSeconds(lifetime);
-            Destroy(gameObject);
 
-            Destroy(gameObject);
+            gameObject.SetActive(false);
+
         }
     }
 }

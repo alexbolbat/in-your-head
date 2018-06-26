@@ -8,26 +8,19 @@ using ZSG.Weapons;
 
 namespace ZSG.Factory
 {
-    public class CollideEffectsFactory : MonoBehaviour
-    {
-        private static CollideEffectsFactory instance;
-
-        public static void Show(Vector3 position, ProjectileType projectile, SurfaceType surface)
-        {
-            instance.ShowEffect(position, projectile, surface);
-        }
-
-
+    public class CollideEffects : MonoBehaviour
+    { 
         [SerializeField]
         private List<CollisionEffect> effects;
 
-        private void ShowEffect(Vector3 position, ProjectileType projectile, SurfaceType surface)
+        private TemplatePool<Effect> pool;
+
+        public void Show(Vector3 position, ProjectileType projectile, SurfaceType surface)
         {
             CollisionEffect effect = effects.FirstOrDefault(e => e.Projectile == projectile && e.Surface == surface);
             if (effect != null && effect.Effect != null)
             {
-                Effect instance = Instantiate(effect.Effect, transform);
-                instance.gameObject.SetActive(true);
+                Effect instance = pool.Get(effect.Effect);
                 instance.transform.position = position;
                 instance.Show();
             }
@@ -35,7 +28,7 @@ namespace ZSG.Factory
 
         private void Awake()
         {
-            instance = this;
+            pool = new TemplatePool<Effect>(transform);
         }
 
 

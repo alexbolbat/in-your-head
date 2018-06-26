@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using ZSG.Controller;
 using ZSG.Utils;
 
 namespace ZSG.Weapons
@@ -31,10 +30,11 @@ namespace ZSG.Weapons
         private ParticleSystem fireEffect;
         [SerializeField]
         private Light lightEffect;
-
+        
         private State state;
         private int roundsInClip;
         private bool shooting;
+
 
         public override void StartAttack()
         {
@@ -113,7 +113,7 @@ namespace ZSG.Weapons
 
                 FireEffects();
 
-                ProjectileFactory.InitProjectile(projectile, muzzle, damage);
+                App.Projectiles.Create(projectile, muzzle, damage);
             }
             else if (rounds > 0)
             {
@@ -134,8 +134,6 @@ namespace ZSG.Weapons
                 SetAnimationParam(outOfAmmoAnimnParam);
             }
         }
-
-        //private void 
 
         private void FireEffects()
         {

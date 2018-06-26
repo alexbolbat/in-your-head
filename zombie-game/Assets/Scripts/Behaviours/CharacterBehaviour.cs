@@ -4,20 +4,20 @@ namespace ZSG.Behaviour
 { 
     public class CharacterBehaviour : MonoBehaviour
     {
-        protected bool isDead;
+        protected bool isActive = true;
 
-        public void Die()
+        public void SetActive(bool value)
         {
-            if (!isDead)
+            if (value == isActive)
             {
-                isDead = true;
-                OnDie();
+                return;
             }
+            isActive = true;
+            OnActiveSet(value);
         }
 
-        protected virtual void OnDie()
+        protected virtual void OnActiveSet(bool value)
         {
-
         }
     }
 }

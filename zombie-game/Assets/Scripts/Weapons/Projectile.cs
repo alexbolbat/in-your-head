@@ -5,8 +5,10 @@ using ZSG.Factory;
 
 namespace ZSG.Weapons
 {
-    public class Projectile : MonoBehaviour
+    public class Projectile : MonoBehaviour, IReusable
     {
+        public event Action BecameUsed;
+
         [SerializeField]
         private ProjectileType type;
         [SerializeField]
@@ -16,6 +18,15 @@ namespace ZSG.Weapons
         private Vector3 prevPosition;
         private Vector3 startPosition;
 
+
+        public void Launch(Transform direction, float damage)
+        {
+            transform.position = direction.position;
+            transform.rotation = direction.rotation;
+
+            Launch(damage);
+        }
+
         public void Launch(float damage)
         {
             this.damage = damage;
@@ -23,6 +34,12 @@ namespace ZSG.Weapons
             startPosition = transform.position;
             prevPosition = startPosition;
         }
+
+        public void Reset()
+        {
+            gameObject.SetActive(true);
+        }
+
 
         private void Update()
         {
@@ -33,17 +50,33 @@ namespace ZSG.Weapons
                 if (vulnurable != null)
                 {
                     vulnurable.DealDamage(damage);
-                    CollideEffectsFactory.Show(hitinfo.point, type, vulnurable.Surface);
-                    //TODO
-                    Destroy(gameObject);
+                    App.CollideEffects.Show(hitinfo.point, type, vulnurable.Surface);
+
+                    Utilize();
+                    return;
                 }
             }
             prevPosition = transform.position;
-            //TODO
-            if (Vector3.Distance(prevPosition, startPosition) > 1000f)
+            if (Vector3.Distance(prevPosition, startPosition) > 500f)
             {
-                Destroy(gameObject);
+                Utilize();
             }
+        }
+
+        private void OnDestroy()
+        {
+            BecameUsed = null;
+            rigidbody = null;
+        }
+
+
+        private void Utilize()
+        {
+            rigidbody.velocity = Vector3.zero;
+            rigidbody.angularVelocity = Vector3.zero;
+
+            gameObject.SetActive(false);
+            BecameUsed.Call();
         }
     }
 }

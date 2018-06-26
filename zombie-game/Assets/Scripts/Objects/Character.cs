@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ZSG.Behaviour;
+using ZSG.Factory;
+using ZSG.Utils;
 
 namespace ZSG.Objects
 { 
-    public class Character : MonoBehaviour
+    public class Character : MonoBehaviour, IReusable
     {
         public event Action Died;
+        public event Action BecameUsed;
 
         [SerializeField]
         private float hp = 100f;
@@ -17,6 +20,8 @@ namespace ZSG.Objects
         private Animator animator;
         [SerializeField]
         private string dieAnimnName = "dead";
+        [SerializeField]
+        private float timeToDisintegrate = -1f;
         [SerializeField]
         private List<Vulnerable> vulnerables;
 
@@ -41,6 +46,11 @@ namespace ZSG.Objects
                 }
             }
             return null;
+        }
+
+        public void Reset()
+        {
+            behaviours.ForEach(b => b.SetActive(true));
         }
 
 
@@ -83,11 +93,18 @@ namespace ZSG.Objects
                 return;
             }
             isDead = true;
-            foreach (var behaviour in behaviours)
-            {
-                behaviour.Die();
-            }
+
+            behaviours.ForEach(b => b.SetActive(false));
+
             SetDeadAnimation(true);
+
+            if (timeToDisintegrate > 0)
+            {
+                TimerUtil.Timeout(timeToDisintegrate, () =>
+                {
+
+                });
+            }
 
             Died.Call();
         }
